@@ -1,6 +1,6 @@
 package com.test.restservice.controllers;
 
-import Util.Util;
+import com.test.restservice.Util.Util;
 import com.test.restservice.models.Employee;
 import com.test.restservice.services.EmployeeService;
 import com.test.soap.wsdl.SaveEmployeeResponse;

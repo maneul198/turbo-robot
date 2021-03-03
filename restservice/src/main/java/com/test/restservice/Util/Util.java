@@ -1,4 +1,4 @@
-package Util;
+package com.test.restservice.Util;
 
 import com.test.restservice.models.Employee;
 
