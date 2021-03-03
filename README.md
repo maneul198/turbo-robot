@@ -7,7 +7,7 @@
 ## Instalación
 1. Clonar este repositorio en la ubicacion preferida
     ```console
-   $ git clone https://github.com/maneul198/
+   $ git clone https://github.com/maneul198/turbo-robot/blob/master/README.md
     ```
 
 ### **Ejecucion**
