@@ -22,6 +22,7 @@ Para una correcta ejecucion debe correr tambien previamente sobre ambos director
    mvn compile
 ```
 a fin de obtener las clases SOAP autogeneradas (JAXB)
+
 Ahora puede probar el servicio usando 
 ```console
 curl 'localhost:8080/employee?name=manuel&surname=apellido&documentType=1&documentNumber=1234567&birthday=2000-03-27&hireday=2021-01-04&role=admin&salary=1000' -v

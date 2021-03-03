@@ -21,7 +21,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @Autowired
-    EmployeeController(EmployeeService employeeService){
+    EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
@@ -38,13 +38,16 @@ public class EmployeeController {
             @RequestParam(name = "hireday") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String hireDay
     ) throws Exception {
 
+        if (Util.getAge(birthDay) < AGE) {
+            throw new Exception("error, the employee most be of legal age");
+        }
+
         Employee employee = Util.buildEmployee(name, surname, documentType, documentNumber, role,
                 salary, birthDay, hireDay);
 
         SaveEmployeeResponse r = employeeService.saveEmployee(employee);
-
-        if (!r.getStatus().equals(OK) || Util.getAge(birthDay) < AGE) {
-            throw new Exception();
+        if (!r.getStatus().equals(OK)) {
+            throw new Exception("an error occurred when trying to save the registry");
         }
 
         return employee;
