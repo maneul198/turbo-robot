@@ -60,6 +60,11 @@
             <artifactId>jaxb-runtime</artifactId>
             <version>2.3.0-b170127.1453</version>
         </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>2.3.5</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -81,7 +86,7 @@
                 </executions>
                 <configuration>
                     <schemaLanguage>WSDL</schemaLanguage>
-                    <generatePackage>com.test.soap.wsdl</generatePackage>
+                    <generatePackage>com.demo.soap.wsdl</generatePackage>
                     <schemas>
                         <schema>
                             <url>http://localhost:8081/ws/employees.wsdl</url>
