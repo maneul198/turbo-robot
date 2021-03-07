@@ -2,7 +2,8 @@ package com.demo.restservice.controllers;
 
 import com.demo.restservice.dto.GetEmployeeDto;
 import com.demo.restservice.dto.SavedEmployeeDto;
-import com.demo.restservice.services.EmployeeService;
+import com.demo.restservice.exceptions.NotLegalAgeException;
+import com.demo.restservice.services.IEmployeeService;
 import com.demo.soap.wsdl.SaveEmployeeResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,13 @@ public class EmployeeController {
 
     private static final String OK = "ok";
     private static final int AGE = 18; //21
-    private static final String DIFF_FORMAT = "Years: %d - Months: %d - Days: %d";
 
-    private EmployeeService employeeService;
+    private IEmployeeService employeeService;
     private ModelMapper modelMapper;
 
     @Autowired
-    EmployeeController(EmployeeService employeeService, ModelMapper modelMapper) {
-        this.employeeService = employeeService;
+    EmployeeController(IEmployeeService iEmployeeService, ModelMapper modelMapper) {
+        this.employeeService = iEmployeeService;
         this.modelMapper = modelMapper;
     }
 
@@ -46,7 +46,7 @@ public class EmployeeController {
     ) throws Exception {
 
         if (getAge(birthDay) < AGE) {
-            throw new Exception("error, the employee most be of legal age");
+            throw new NotLegalAgeException("error, the employee most be of legal age");
         }
 
         GetEmployeeDto getEmployeeDto = buildGetEmployeeDto(name, surname, documentType, documentNumber, role,
@@ -58,10 +58,10 @@ public class EmployeeController {
             throw new Exception("an error occurred when trying to save the registry");
         }
 
-        return buildSaveEmployeeDto(getEmployeeDto, birthDay, hireDay);
+        return buildSaveEmployeeDto(getEmployeeDto);
     }
 
-    public GetEmployeeDto buildGetEmployeeDto(String name, String surname, String documentType, String documentNumber,
+    private GetEmployeeDto buildGetEmployeeDto(String name, String surname, String documentType, String documentNumber,
                                         String role, String salary, String birthDay, String hireDay) {
 
         GetEmployeeDto getEmployeeDto = new GetEmployeeDto();
@@ -76,23 +76,16 @@ public class EmployeeController {
         return getEmployeeDto;
     }
 
-    private SavedEmployeeDto buildSaveEmployeeDto(GetEmployeeDto getEmployeeDto, String birthDay, String hireDay){
+    private SavedEmployeeDto buildSaveEmployeeDto(GetEmployeeDto getEmployeeDto){
         SavedEmployeeDto savedEmployeeDto = modelMapper.map(getEmployeeDto, SavedEmployeeDto.class);
-        savedEmployeeDto.setAge(getDiff(birthDay));
-        savedEmployeeDto.setHireTime(getDiff(hireDay));
+        savedEmployeeDto.setHireTime();
+        savedEmployeeDto.setAge();
         return savedEmployeeDto;
-
     }
 
-    public int getAge(String birthDay) {
+    private int getAge(String birthDay) {
         LocalDate localDateBirthDay = LocalDate.parse(birthDay, DateTimeFormatter.ISO_LOCAL_DATE);
         Period diff = Period.between(localDateBirthDay, LocalDate.now());
         return diff.getYears();
-    }
-
-    public String getDiff(String date) {
-        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
-        Period diff = Period.between(localDate, LocalDate.now());
-        return String.format(DIFF_FORMAT, diff.getYears(), diff.getMonths(), diff.getDays());
     }
 }

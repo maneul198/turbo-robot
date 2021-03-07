@@ -1,6 +1,13 @@
 package com.demo.restservice.dto;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+
 public class SavedEmployeeDto {
+
+    private static final String DIFF_FORMAT = "Years: %d - Months: %d - Days: %d";
+
     private String name;
     private String surname;
     private String documentType;
@@ -16,16 +23,22 @@ public class SavedEmployeeDto {
         return hireTime;
     }
 
-    public void setHireTime(String hireTime) {
-        this.hireTime = hireTime;
+    public void setHireTime() {
+        this.hireTime = getDiff(hireDay);
     }
 
     public String getAge() {
         return age;
     }
 
-    public void setAge(String age) {
-        this.age = age;
+    public void setAge() {
+        this.age = getDiff(birthDay);
+    }
+
+    private String getDiff(String date) {
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        Period diff = Period.between(localDate, LocalDate.now());
+        return String.format(DIFF_FORMAT, diff.getYears(), diff.getMonths(), diff.getDays());
     }
 
     public String getName() {

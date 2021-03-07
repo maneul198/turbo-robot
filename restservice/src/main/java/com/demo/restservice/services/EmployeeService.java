@@ -1,19 +1,19 @@
 package com.demo.restservice.services;
 
-import com.demo.restservice.clients.EmployeeClient;
+import com.demo.restservice.clients.IEmployeeClient;
 import com.demo.restservice.dto.GetEmployeeDto;
 import com.demo.soap.wsdl.SaveEmployeeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmployeeService {
+public class EmployeeService implements IEmployeeService{
 
-    private EmployeeClient employeeClient;
+    private IEmployeeClient employeeClient;
 
     @Autowired
-    EmployeeService(EmployeeClient employeeClient){
-        this.employeeClient = employeeClient;
+    EmployeeService(IEmployeeClient iEmployeeClient){
+        this.employeeClient = iEmployeeClient;
     }
 
     public SaveEmployeeResponse saveEmployee(GetEmployeeDto employee) {
