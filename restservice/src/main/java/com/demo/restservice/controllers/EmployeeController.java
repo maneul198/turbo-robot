@@ -2,7 +2,7 @@ package com.demo.restservice.controllers;
 
 import com.demo.restservice.dto.GetEmployeeDto;
 import com.demo.restservice.dto.SavedEmployeeDto;
-import com.demo.restservice.exceptions.NotLegalAgeException;
+import com.demo.restservice.exceptions.ILegalAgeException;
 import com.demo.restservice.services.IEmployeeService;
 import com.demo.soap.wsdl.SaveEmployeeResponse;
 import org.modelmapper.ModelMapper;
@@ -46,7 +46,7 @@ public class EmployeeController {
     ) throws Exception {
 
         if (getAge(birthDay) < AGE) {
-            throw new NotLegalAgeException("error, the employee most be of legal age");
+            throw new ILegalAgeException("error, the employee most be of legal age");
         }
 
         GetEmployeeDto getEmployeeDto = buildGetEmployeeDto(name, surname, documentType, documentNumber, role,

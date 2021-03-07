@@ -1,5 +1,5 @@
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-                  xmlns:gs="http://test.io/">
+                  xmlns:gs="http://demo.io/">
     <soapenv:Header/>
     <soapenv:Body>
         <gs:saveEmployeeRequest>
