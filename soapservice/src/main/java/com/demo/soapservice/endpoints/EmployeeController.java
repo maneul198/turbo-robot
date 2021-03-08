@@ -1,5 +1,6 @@
 package com.demo.soapservice.endpoints;
 
+import com.demo.soapservice.exceptions.DuplicateEmployeeException;
 import com.demo.soapservice.models.Employee;
 import com.demo.soapservice.services.IEmployeeService;
 
@@ -32,7 +33,8 @@ public class EmployeeController {
     @ResponsePayload
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = LOCAL_PART)
     public SaveEmployeeResponse saveEmployee(@RequestPayload SaveEmployeeRequest request)
-            throws java.text.ParseException {
+            throws java.text.ParseException, DuplicateEmployeeException {
+
         employeeService.save(buildEntity(request.getEmployee()));
         SaveEmployeeResponse response = new SaveEmployeeResponse();
         response.setStatus(OK);

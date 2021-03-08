@@ -3,6 +3,7 @@ package com.demo.restservice.controllers;
 import com.demo.restservice.dto.GetEmployeeDto;
 import com.demo.restservice.dto.SavedEmployeeDto;
 import com.demo.restservice.exceptions.ILegalAgeException;
+import com.demo.restservice.exceptions.SoapConsumeException;
 import com.demo.restservice.services.IEmployeeService;
 import com.demo.soap.wsdl.SaveEmployeeResponse;
 import org.modelmapper.ModelMapper;
@@ -21,6 +22,8 @@ import java.time.format.DateTimeFormatter;
 public class EmployeeController {
 
     private static final String OK = "ok";
+    private static final String AGE_ERROR  = "error, the employee most be of legal age";
+    private static final String CONSUME_SOAP_ERROR  = "an error occurred when trying to consume SOAP service";
     private static final int AGE = 18; //21
 
     private IEmployeeService employeeService;
@@ -37,16 +40,16 @@ public class EmployeeController {
     SavedEmployeeDto saveEmployee(
             @RequestParam @NotBlank String name,
             @RequestParam @NotBlank String surname,
-            @RequestParam @NotBlank String documentType,
-            @RequestParam @NotBlank String documentNumber,
+            @RequestParam(name = "documenttype") @NotBlank String documentType,
+            @RequestParam(name = "documentnumber") @NotBlank String documentNumber,
             @RequestParam @NotBlank String role,
             @RequestParam @NotBlank String salary,
             @RequestParam(name = "birthday") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String birthDay,
             @RequestParam(name = "hireday") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String hireDay
-    ) throws Exception {
+    ) throws SoapConsumeException, ILegalAgeException {
 
         if (getAge(birthDay) < AGE) {
-            throw new ILegalAgeException("error, the employee most be of legal age");
+            throw new ILegalAgeException(AGE_ERROR);
         }
 
         GetEmployeeDto getEmployeeDto = buildGetEmployeeDto(name, surname, documentType, documentNumber, role,
@@ -55,7 +58,7 @@ public class EmployeeController {
         SaveEmployeeResponse saveEmployeeResponse = employeeService.saveEmployee(getEmployeeDto);
 
         if (!saveEmployeeResponse.getStatus().equals(OK)) {
-            throw new Exception("an error occurred when trying to save the registry");
+            throw new SoapConsumeException(CONSUME_SOAP_ERROR);
         }
 
         return buildSaveEmployeeDto(getEmployeeDto);

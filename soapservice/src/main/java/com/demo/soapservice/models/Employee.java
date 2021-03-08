@@ -79,5 +79,4 @@ public class Employee {
     public void setSalary(String salary) {
         this.salary = salary;
     }
-
 }
